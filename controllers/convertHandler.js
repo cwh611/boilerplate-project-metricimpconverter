@@ -2,16 +2,32 @@ function ConvertHandler() {
 
   this.getNum = function(input) {
     let numString = input.split(/[a-zA-Z]/, 1)[0];
-    return numString ? Number(numString) : 1;
+    console.log("NUM STRING:", numString);
+    if (numString.match(/\/\//)) {
+      return null;
+    };
+    if (numString) {
+      if (numString.includes("/")) {
+        const [numerator, denominator] = numString.split("/").map(Number);
+        return Number((numerator / denominator).toFixed(5));
+      } else {
+        return Number(numString);
+      }
+    } else {
+      return 1;
+    }
   };
 
   this.getUnit = function(input) {
-    let unitMatch = input.match(/[a-zA-Z]+/);
+    let unitMatch = input.match(/[a-zA-Z]+$/);
+    console.log(unitMatch[0]);
     if (unitMatch[0] === "L" || unitMatch[0] === "l") {
       return unitMatch[0].toUpperCase();
-    } else {
-      return unitMatch ? unitMatch[0].toLowerCase() : null;
-    }
+    } else if (unitMatch[0].toLowerCase() === "gal" || unitMatch[0].toLowerCase() === "lbs" || unitMatch[0].toLowerCase() === "kg" || unitMatch[0].toLowerCase() === "mi" || unitMatch[0].toLowerCase() === "km") {
+      return unitMatch[0].toLowerCase();
+    } else  {
+      return null;
+    };
   };
 
   this.getReturnUnit = function(initUnit) {
@@ -52,11 +68,14 @@ function ConvertHandler() {
       case "mi": result = initNum * miToKm; break;
       case "km": result = initNum / miToKm; break;
     }
+    if (result === undefined) {
+      return 0;
+    } else  {
     return result;
-  };
+  }};
 
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}.`;
+    return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`;
   };
 
 }

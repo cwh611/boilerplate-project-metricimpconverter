@@ -11,21 +11,27 @@ module.exports = function (app) {
     console.log("REQ URL:", req.url)
     console.log("input:", input);
     const initNum = convertHandler.getNum(input);
+    console.log("INIT NUM:", initNum);
     const initUnit = convertHandler.getUnit(input);
+    console.log(initUnit);
     const returnUnit = convertHandler.getReturnUnit(initUnit);
-    const returnNum = convertHandler.convert(initNum, initUnit).toFixed(5);
+    const returnNum = Number(convertHandler.convert(initNum, initUnit).toFixed(5));
+    console.log("RETURN NUM:", returnNum);
     const returnString = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
-    if (!initNum) {
-      return res.json({error: "invalid number"})
-    } else if (!returnUnit) {
-      return res.json({error: "invalid unit"})
-    } else if (!initNum && !returnUnit) {
-      return res.json({error: "invalid number and unit"})
+    if (!initNum && !initUnit) {
+      console.log("invalid number and unit");
+      return res.json({error: "invalid number and unit"});
+    } else if (!initNum) {
+      console.log("invalid number");
+      return res.json({error: "invalid number"});
+    } else if (!initUnit) {
+      console.log("invalid unit");
+      return res.json({error: "invalid unit"});
     } else  {
       res.json({initNum, initUnit, returnNum, returnUnit,
         string: returnString
       });
-      console.log("RESPONSE IF VALID REQUEST:", returnString)
+      console.log("RESPONSE IF VALID REQUEST:", returnString);
     }
   })
 
